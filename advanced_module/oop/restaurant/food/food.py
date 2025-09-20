@@ -7,11 +7,11 @@ class Food(Product):
         self.__grams = grams
 
     @property
-    def __grams(self):
-        return self.grams
+    def grams(self):
+        return self.__grams
 
-    @__grams.setter
-    def __grams(self, value):
+    @grams.setter
+    def grams(self, value):
         if not value:
             raise ValueError("Enter grams")
-        self.grams = value
+        self.__grams = value

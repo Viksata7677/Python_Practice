@@ -7,11 +7,11 @@ class Beverage(Product):
         self.__milliliters = milliliters
 
     @property
-    def __milliliters(self):
-        return self.milliliters
+    def milliliters(self):
+        return self.__milliliters
 
-    @__milliliters.setter
-    def __milliliters(self, value):
-        if not value:
+    @milliliters.setter
+    def milliliters(self, value):
+        if value <= 0:
             raise ValueError("Enter milliliters")
-        self.milliliters = value
+        self.__milliliters = value

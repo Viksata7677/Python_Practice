@@ -10,11 +10,11 @@ class Coffee(HotBeverage):
         self.__caffeine = caffeine
 
     @property
-    def __caffeine(self):
-        return self.caffeine
+    def caffeine(self):
+        return self.__caffeine
 
-    @__caffeine.setter
-    def __caffeine(self, value):
-        if not value:
+    @caffeine.setter
+    def caffeine(self, value):
+        if value <= 0:
             raise ValueError("Enter caffeine")
         self.__caffeine = value

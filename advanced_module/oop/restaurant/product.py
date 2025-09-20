@@ -4,14 +4,14 @@ class Product:
         self.__price = price
 
     @property
-    def __name(self):
-        return self.name
+    def name(self):
+        return self.__name
 
-    @__name.setter
-    def __name(self, value):
+    @name.setter
+    def name(self, value):
         if not value:
             raise ValueError("Enter name!")
-        self.name = value
+        self.__name = value
 
     @property
     def __price(self):

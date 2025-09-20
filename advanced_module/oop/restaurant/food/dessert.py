@@ -7,10 +7,9 @@ class Dessert(Food):
         self.__calories = calories
 
     @property
-    def __calories(self):
-        return self.calories
+    def calories(self):
+        return self.__calories
 
-    @__calories.setter
-    def __calories(self, value):
+    @calories.setter
+    def calories(self, value):
         self.__calories = value
-
