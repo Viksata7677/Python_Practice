@@ -53,4 +53,4 @@ class Exercise(models.Model):
     equipment = models.CharField(max_length=90)
     video_url = models.URLField(null=True, blank=True)
     calories_burned = models.PositiveIntegerField(default=1)
-    is_favourite = models.BooleanField(default=False)
+    is_favorite = models.BooleanField(default=False)
