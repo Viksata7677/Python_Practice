@@ -58,16 +58,17 @@ class Exercise(models.Model):
     is_favorite = models.BooleanField(default=False)
 
 
-class Book(models.Model):
-    class GenreChoices(models.TextChoices):
-        Fiction = "Fiction", "Fiction"
-        Non_Fiction = "Non-Fiction", "Non-Fiction"
-        Science_Fiction = "Science Fiction", "Science Fiction"
-        Horror = "Horror", "Horror"
+class GenreChoices(models.TextChoices):
+    Fiction = "Fiction", "Fiction"
+    Non_Fiction = "Non-Fiction", "Non-Fiction"
+    Science_Fiction = "Science Fiction", "Science Fiction"
+    Horror = "Horror", "Horror"
 
+
+class Book(models.Model):
     title = models.CharField(max_length=30)
     author = models.CharField(max_length=100)
-    genre = models.CharField(max_length=20, choices=GenreChoices)
+    genre = models.CharField(max_length=20, choices=GenreChoices.choices)
     publication_date = models.DateField(editable=False, auto_now_add=True)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     is_available = models.BooleanField(default=True)
