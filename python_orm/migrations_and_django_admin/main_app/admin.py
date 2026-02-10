@@ -7,7 +7,7 @@ from main_app.models import Product
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'category', 'price', 'created_on']
     list_filter = ['category', 'supplier']
-    search_fields = ['category', 'supplier']
+    search_fields = ['name', 'category', 'supplier']
     fieldsets = [
         ('General Information', {
             'fields': [
