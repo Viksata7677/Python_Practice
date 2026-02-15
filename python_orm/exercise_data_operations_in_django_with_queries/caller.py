@@ -1,4 +1,6 @@
 import os
+from pydoc import describe
+
 import django
 
 # Set up Django
@@ -6,7 +8,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 # Import your models here
-from main_app.models import Pet, Artifact, Location, Car
+from main_app.models import Pet, Artifact, Location, Car, Task
 
 
 # Create queries within functions
@@ -83,3 +85,24 @@ def get_recent_cars():
 
 def delete_last_car():
     Car.objects.last().delete()
+
+
+def show_unfinished_tasks():
+    unfinished_tasks = Task.objects.filter(is_finished=False)
+
+    return '\n'.join(
+        f"Task - {ut.title} needs to be done until {ut.due_date}!" for ut in unfinished_tasks)
+
+
+def complete_odd_tasks():
+    tasks = Task.objects.all()
+    for task in tasks:
+        if task.id % 2 == 1:
+            task.is_finished = True
+
+        Task.objects.bulk_update(tasks, ['is_finished'])
+
+
+def encode_and_replace(text: str, task_title: str):
+    decoded_text = ''.join(chr(ord(symbol) - 3) for symbol in text)
+    Task.objects.filter(title=task_title).update(description=decoded_text)
