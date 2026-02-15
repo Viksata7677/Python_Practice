@@ -11,7 +11,7 @@ from main_app.models import Student
 
 def add_students():
     Student.objects.create(student_id='FC5204', first_name='John',
-                           last_name='Doe', birth_date='1995-02-15',
+                           last_name='Doe', birth_date='1995-05-15',
                            email='john.doe@university.com')
     Student.objects.create(student_id='FE0054', first_name='Jane',
                            last_name='Smith', birth_date=None,
@@ -22,8 +22,14 @@ def add_students():
     Student.objects.create(student_id='FH2015', first_name='Bob',
                            last_name='Wilson', birth_date='1996-11-25',
                            email='bob.wilson@university.com')
+
+
+def get_students_info():
+    result = []
+    students = Student.objects.all()
+
+    for student in students:
+        result.append(f'Student №{student.student_id}: {student.first_name} {student.last_name}; Email: {student.email}')
+
+    return '\n'.join(result)
 # Run and print your queries
-
-
-add_students()
-print(Student.objects.all())
