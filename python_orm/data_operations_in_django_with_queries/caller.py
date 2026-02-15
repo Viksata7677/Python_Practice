@@ -41,4 +41,9 @@ def update_students_emails():
         student.email = student.email.replace("university.com", "uni-students.com")
 
         student.save()
+
+
+def truncate_students():
+    students = Student.objects.all()
+    students.delete()
 # Run and print your queries
