@@ -8,7 +8,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 # Import your models here
-from main_app.models import Pet, Artifact, Location, Car, Task, HotelRoom
+from main_app.models import Pet, Artifact, Location, Car, Task, HotelRoom, Character
 
 
 # Create queries within functions
@@ -145,3 +145,69 @@ def delete_last_room():
 
     if not last_room.is_reserved:
         last_room.delete()
+
+
+def update_characters():
+    for char in Character.objects.all():
+        if char.class_name == 'Mage':
+            char.level += 3
+            char.intelligence -= 7
+        elif char.class_name == 'Warrior':
+            char.hit_points /= 2
+            char.dexterity += 4
+        else:
+            char.inventory = 'The inventory is empty'
+
+        char.save()
+
+
+def fuse_characters(first_character: Character, second_character: Character):
+    mega_character = Character()
+    mega_character.name = f"{first_character.name} {second_character.name}"
+    mega_character.class_name = 'Fusion'
+
+    mega_character.level = abs(int((first_character.level + second_character.level) // 2))
+    mega_character.strength = abs(int((first_character.strength + second_character.strength) * 1.2))
+    mega_character.dexterity = abs(int((first_character.dexterity + second_character.dexterity) * 1.4))
+    mega_character.intelligence = abs(int((first_character.intelligence + second_character.intelligence) * 1.5))
+
+    mega_character.hit_points = (first_character.hit_points + second_character.hit_points)
+    if first_character.class_name in ['Mage', 'Scout']:
+        mega_character.inventory = "Bow of the Elven Lords, Amulet of Eternal Wisdom"
+    else:
+        mega_character.inventory = "Dragon Scale Armor, Excalibur"
+    mega_character.save()
+
+    first_character.delete()
+    second_character.delete()
+
+
+def grand_dexterity():
+    characters = Character.objects.all()
+    for char in characters:
+        char.dexterity = 30
+
+    Character.objects.bulk_update(characters, ['dexterity'])
+
+
+def grand_intelligence():
+    characters = Character.objects.all()
+    for char in characters:
+        char.intelligence = 40
+
+    Character.objects.bulk_update(characters, ['intelligence'])
+
+
+def grand_strength():
+    characters = Character.objects.all()
+    for char in characters:
+        char.strength = 50
+
+    Character.objects.bulk_update(characters, ['strength'])
+
+
+def delete_characters():
+    chars_to_delete = Character.objects.filter(inventory='The inventory is empty')
+
+    for char in chars_to_delete:
+        char.delete()
