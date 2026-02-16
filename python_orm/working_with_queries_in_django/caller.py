@@ -80,4 +80,16 @@ def delete_review_by_id(review_id):
     deleted_review = Review.objects.get(pk=review_id)
     deleted_review.delete()
     return f"{str(deleted_review)} was deleted"
+
+
+def filter_authors_by_nationalities(nationality):
+    filtered_authors = Author.objects.filter(nationality=nationality).order_by('first_name', 'last_name')
+    result = []
+    for a in filtered_authors:
+        if a.biography is not None:
+            result.append(a.biography)
+        else:
+            result.append(f"{a.first_name} {a.last_name}")
+
+    return '\n'.join(result)
 # Run and print your queries
