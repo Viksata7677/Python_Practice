@@ -61,7 +61,10 @@ def add_records_to_database():
 def find_books_by_genre_and_language(book_genre, book_language):
     return Book.objects.filter(genre=book_genre, language=book_language)
 
+
+def find_authors_nationalities():
+    excluded_authors = Author.objects.exclude(nationality=None)
+    result = [f"{author.first_name} {author.last_name} is {author.nationality}" for author in excluded_authors]
+
+    return '\n'.join(result)
 # Run and print your queries
-# print(add_records_to_database())
-
-
