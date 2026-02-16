@@ -92,4 +92,11 @@ def filter_authors_by_nationalities(nationality):
             result.append(f"{a.first_name} {a.last_name}")
 
     return '\n'.join(result)
+
+
+def filter_authors_by_birth_year(year_1, year_2):
+    filtered_authors = Author.objects.filter(birth_date__year__lte=year_2, birth_date__year__gte=year_1).order_by('-birth_date')
+    result = [f"{a.birth_date}: {a.first_name} {a.last_name}" for a in filtered_authors]
+
+    return '\n'.join(result)
 # Run and print your queries
