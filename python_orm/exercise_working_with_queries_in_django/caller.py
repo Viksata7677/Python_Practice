@@ -2,14 +2,14 @@ import os
 from typing import List
 
 import django
-
+from django.db.models.expressions import result
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 # Import your models
-from main_app.models import ArtworkGallery, Laptop, ChessPlayer, Meal, Dungeon
+from main_app.models import ArtworkGallery, Laptop, ChessPlayer, Meal, Dungeon, Workout
 
 
 # Create and check models
@@ -152,4 +152,36 @@ def set_new_locations():
     Dungeon.objects.filter(recommended_level=25).update(location='Enchanted Maze')
     Dungeon.objects.filter(recommended_level=50).update(location='Grimstone Mines')
     Dungeon.objects.filter(recommended_level=75).update(location='Shadowed Abyss')
+
+
+def show_workouts():
+    filtered_workouts = Workout.objects.filter(workout_type__in=['Calisthenics', 'CrossFit']).order_by('id')
+    result = [f'{fw.name} from {fw.workout_type} type has {fw.difficulty} difficulty!' for fw in filtered_workouts]
+    return '\n'.join(result)
+
+
+def get_high_difficulty_cardio_workouts():
+    cardio = Workout.objects.filter(workout_type='Cardio', difficulty='High').order_by('instructor')
+    return cardio
+
+
+def set_new_instructors():
+    Workout.objects.filter(workout_type='Cardio').update(instructor='John Smith')
+    Workout.objects.filter(workout_type='Strength').update(instructor='Michael Williams')
+    Workout.objects.filter(workout_type='Yoga').update(instructor='Emily Johnson')
+    Workout.objects.filter(workout_type='CrossFit').update(instructor='Sarah Davis')
+    Workout.objects.filter(workout_type='Calisthenics').update(instructor='Chris Heria')
+
+
+def set_new_duration_times():
+    Workout.objects.filter(instructor='John Smith').update(duration='15 minutes')
+    Workout.objects.filter(instructor='Sarah Davis').update(duration='30 minutes')
+    Workout.objects.filter(instructor='Chris Heria').update(duration='45 minutes')
+    Workout.objects.filter(instructor='Michael Williams').update(duration='1 hour')
+    Workout.objects.filter(instructor='Emily Johnson').update(duration='1 hour and 30 minutes')
+
+
+def delete_workouts():
+    Workout.objects.exclude(workout_type__in=['Strength', 'Calisthenics']).delete()
 # Run and print your queries
+# Create two Workout instances
