@@ -9,7 +9,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 # Import your models
-from main_app.models import ArtworkGallery, Laptop, ChessPlayer, Meal
+from main_app.models import ArtworkGallery, Laptop, ChessPlayer, Meal, Dungeon
 
 
 # Create and check models
@@ -115,4 +115,41 @@ def update_high_calorie_meals():
 
 def delete_lunch_and_snack_meals():
     Meal.objects.filter(meal_type__in=['Lunch', 'Snack']).delete()
+
+
+def show_hard_dungeons():
+    sorted_dungeons = Dungeon.objects.filter(difficulty='Hard').order_by('-location')
+    return '\n'.join([f"{sd.name} is guarded by {sd.boss_name} who has {sd.boss_health} health points!" for sd in sorted_dungeons])
+
+
+def bulk_create_dungeons(args: List[Dungeon]):
+    Dungeon.objects.bulk_create(args)
+
+
+def update_dungeon_names():
+    Dungeon.objects.filter(difficulty='Easy').update(name='The Erased Thombs')
+    Dungeon.objects.filter(difficulty='Medium').update(name='The Coral Labyrinth')
+    Dungeon.objects.filter(difficulty='Hard').update(name='The Lost Haunt')
+
+
+def update_dungeon_bosses_health():
+    Dungeon.objects.exclude(difficulty='Easy').update(boss_health=500)
+
+
+def update_dungeon_recommended_levels():
+    Dungeon.objects.filter(difficulty='Easy').update(recommended_level=25)
+    Dungeon.objects.filter(difficulty='Medium').update(recommended_level=50)
+    Dungeon.objects.filter(difficulty='Hard').update(recommended_level=75)
+
+
+def update_dungeon_rewards():
+    Dungeon.objects.filter(boss_health=500).update(reward='1000 Gold')
+    Dungeon.objects.filter(location__startswith='E').update(reward='New dungeon unlocked')
+    Dungeon.objects.filter(location__endswith='s').update(reward='Dragonheart Amulet')
+
+
+def set_new_locations():
+    Dungeon.objects.filter(recommended_level=25).update(location='Enchanted Maze')
+    Dungeon.objects.filter(recommended_level=50).update(location='Grimstone Mines')
+    Dungeon.objects.filter(recommended_level=75).update(location='Shadowed Abyss')
 # Run and print your queries
