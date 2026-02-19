@@ -40,3 +40,10 @@ class StudentEnrollment(models.Model):
 
     def __str__(self):
         return f"{self.subject.name}"
+
+
+class LecturerProfile(models.Model):
+    lecturer = models.OneToOneField(to=Lecturer, on_delete=models.CASCADE)
+    email = models.EmailField(unique=True)
+    bio = models.TextField(null=True, blank=True)
+    office_location = models.CharField(max_length=100, null=True, blank=True)
