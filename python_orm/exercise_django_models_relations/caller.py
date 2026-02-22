@@ -1,13 +1,14 @@
 import os
 import django
-
+from django.db.models import Sum, Avg
+from django.db.models import Count
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 # Import your models here
-from main_app.models import Author, Book, Artist, Song
+from main_app.models import Author, Book, Artist, Song, Product, Review
 
 
 # Create queries within functions
@@ -46,3 +47,25 @@ def remove_song_from_artist(artist_name: str, song_title: str):
     song = Song.objects.get(title=song_title)
 
     artist.songs.remove(song)
+
+
+def calculate_average_rating_for_product_by_name(product_name: str):
+    product = Product.objects.annotate(
+        average_rating=Avg('reviews__rating'),
+    ).get(name=product_name)
+
+    return product.average_rating
+
+
+def get_reviews_with_high_ratings(threshold: int):
+    reviews = Review.objects.filter(rating__gte=threshold)
+    return reviews
+
+
+def get_products_with_no_reviews():
+    products = Product.objects.filter(reviews__isnull=True).order_by('-name')
+    return products
+
+
+def delete_products_without_reviews():
+    get_products_with_no_reviews().delete()
