@@ -7,6 +7,3 @@ django.setup()
 
 # Import your models here
 
-
-# Create queries within functions
-
