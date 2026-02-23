@@ -7,3 +7,16 @@ django.setup()
 
 # Import your models here
 
+from main_app.models import ZooDisplayAnimal
+
+
+# Keep the data from the previous exercises, so you can reuse it
+
+
+all_animals_info = ZooDisplayAnimal.objects.all()
+
+for a in all_animals_info:
+
+    print(a.display_info())
+
+    print(a.is_endangered())
