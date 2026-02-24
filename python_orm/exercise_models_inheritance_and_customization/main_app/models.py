@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import CASCADE
+
 
 # Create your models here.
 class BaseCharacter(models.Model):
@@ -49,3 +51,37 @@ class VengeanceDemonHunter(DemonHunter):
 
 class FelbladeDemonHunter(DemonHunter):
     felblade_ability = models.CharField(max_length=100)
+
+
+class UserProfile(models.Model):
+    username = models.CharField(max_length=70, unique=True)
+    email = models.EmailField(unique=True)
+    bio = models.TextField(null=True, blank=True)
+
+
+class Message(models.Model):
+    sender = models.ForeignKey(to=UserProfile, on_delete=CASCADE, related_name='sent_messages')
+    receiver = models.ForeignKey(to=UserProfile, related_name='received_messages', on_delete=CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    def mark_as_read(self):
+        self.is_read = True
+
+    def reply_to_message(self, reply_content: str):
+        new_message = Message()
+        new_message.sender = self.receiver
+        new_message.receiver = self.sender
+        new_message.content = reply_content
+        new_message.save()
+        return new_message
+
+    def forward_message(self, receiver: UserProfile):
+        new_message = Message()
+        new_message.sender = self.receiver
+        new_message.receiver = receiver
+        new_message.content = self.content
+        new_message.save()
+        return new_message
+
