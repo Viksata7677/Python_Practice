@@ -1,5 +1,8 @@
+from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator, MaxLengthValidator, MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import CASCADE
+
 
 # Create your models here.
 class Restaurant(models.Model):
@@ -10,3 +13,17 @@ class Restaurant(models.Model):
     description = models.TextField(null=True, blank=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, validators=[MinValueValidator(0.00, message="Rating must be at least 0.00."),
                                                                              MaxValueValidator(5.00, message="Rating cannot exceed 5.00.")])
+
+
+def validate_menu_categories(value):
+    required_categories = ["Appetizers", "Main Course", "Desserts"]
+
+    for category in required_categories:
+        if category.lower() not in value.lower():
+            raise ValidationError('The menu must include each of the categories "Appetizers", "Main Course", "Desserts".')
+
+
+class Menu(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(validators=[validate_menu_categories])
+    restaurant = models.ForeignKey(to=Restaurant, on_delete=CASCADE)
