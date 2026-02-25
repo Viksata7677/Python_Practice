@@ -93,3 +93,7 @@ class Hero(models.Model):
     name = models.CharField(max_length=100)
     hero_title = models.CharField(max_length=100)
     energy = models.PositiveIntegerField()
+
+
+class SpiderHero(Hero):
+    pass
