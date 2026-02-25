@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import MinValueValidator, RegexValidator, MinLengthValidator
 from django.db import models
 
 from main_app.validators import validate_name
@@ -22,3 +22,8 @@ class BaseMedia(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Book(BaseMedia):
+    author = models.CharField(max_length=100, validators=[MinLengthValidator(5, message="Author must be at least 5 characters long")])
+    isbn = models.CharField(max_length=20, unique=True, validators=[MinLengthValidator(6, message="ISBN must be at least 6 characters long")])
