@@ -90,7 +90,7 @@ class DiscountedProduct(Product):
         proxy = True
 
 
-class Hero(models.Model, RechargeEnergyMixing):
+class Hero(models.Model, RechargeEnergyMixin):
     name = models.CharField(max_length=100)
     hero_title = models.CharField(max_length=100)
     energy = models.PositiveIntegerField()
