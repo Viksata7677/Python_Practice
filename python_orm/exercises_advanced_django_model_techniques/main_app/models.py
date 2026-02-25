@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.core.validators import MinValueValidator, RegexValidator, MinLengthValidator
 from django.db import models
 
+from main_app.mixins import RechargeEnergyMixin
 from main_app.validators import validate_name
 
 
@@ -89,7 +90,7 @@ class DiscountedProduct(Product):
         proxy = True
 
 
-class Hero(models.Model):
+class Hero(models.Model, RechargeEnergyMixing):
     name = models.CharField(max_length=100)
     hero_title = models.CharField(max_length=100)
     energy = models.PositiveIntegerField()
