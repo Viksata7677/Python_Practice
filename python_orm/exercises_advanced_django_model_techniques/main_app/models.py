@@ -109,6 +109,9 @@ class SpiderHero(Hero):
         self.save()
         return f"{self.name} as Spider Hero swings from buildings using web shooters"
 
+    class Meta:
+        proxy = True
+
 
 class FlashHero(Hero):
 
@@ -123,3 +126,6 @@ class FlashHero(Hero):
 
         self.save()
         return f"{self.name} as Flash Hero runs at lightning speed, saving the day"
+
+    class Meta:
+        proxy = True
