@@ -27,3 +27,7 @@ class BaseMedia(models.Model):
 class Book(BaseMedia):
     author = models.CharField(max_length=100, validators=[MinLengthValidator(5, message="Author must be at least 5 characters long")])
     isbn = models.CharField(max_length=20, unique=True, validators=[MinLengthValidator(6, message="ISBN must be at least 6 characters long")])
+
+
+class Movie(BaseMedia):
+    director = models.CharField(max_length=100, validators=[MinLengthValidator(8, message="Director must be at least 8 characters long")])
