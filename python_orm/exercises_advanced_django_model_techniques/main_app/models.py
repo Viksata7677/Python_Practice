@@ -111,4 +111,15 @@ class SpiderHero(Hero):
 
 
 class FlashHero(Hero):
-    pass
+
+    def run_at_super_speed(self):
+        if self.energy < 65:
+            return f"{self.name} as Flash Hero needs to recharge the speed force"
+
+        self.energy -= 65
+
+        if self.energy == 0:
+            self.energy = 1
+
+        self.save()
+        return f"{self.name} as Flash Hero runs at lightning speed, saving the day"
