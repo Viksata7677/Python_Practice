@@ -97,3 +97,7 @@ class Hero(models.Model):
 
 class SpiderHero(Hero):
     pass
+
+
+class FlashHero(Hero):
+    pass
