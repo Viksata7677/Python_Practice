@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.validators import MinValueValidator, RegexValidator, MinLengthValidator
 from django.db import models
 
@@ -53,3 +55,35 @@ class Music(BaseMedia):
 class Product(models.Model):
     name = models.CharField(max_length=100)
     price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def calculate_tax(self):
+        return self.price * Decimal(0.08)
+
+    @staticmethod
+    def calculate_shipping_cost(weight: Decimal):
+        shipping_cost = weight * Decimal(2.00)
+        return shipping_cost
+
+    def format_product_name(self):
+        return f"Product: {self.name}"
+
+
+class DiscountedProduct(Product):
+
+    def calculate_price_without_discount(self):
+        price_without_discount = self.price * Decimal(1.20)
+        return price_without_discount
+
+    def calculate_tax(self):
+        return self.price * Decimal(0.05)
+
+    @staticmethod
+    def calculate_shipping_cost(weight: Decimal):
+        shipping_cost = weight * Decimal(1.50)
+        return shipping_cost
+
+    def format_product_name(self):
+        return f"Discounted Product: {self.name}"
+
+    class Meta:
+        proxy = True
