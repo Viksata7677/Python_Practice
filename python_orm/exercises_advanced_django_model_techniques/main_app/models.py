@@ -31,3 +31,7 @@ class Book(BaseMedia):
 
 class Movie(BaseMedia):
     director = models.CharField(max_length=100, validators=[MinLengthValidator(8, message="Director must be at least 8 characters long")])
+
+
+class Music(BaseMedia):
+    artist = models.CharField(max_length=100, validators=[MinLengthValidator(9, message="Artist must be at least 9 characters long".)])
