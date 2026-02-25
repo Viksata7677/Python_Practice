@@ -96,7 +96,18 @@ class Hero(models.Model):
 
 
 class SpiderHero(Hero):
-    pass
+
+    def swing_from_buildings(self):
+        if self.energy < 80:
+            return f"{self.name} as Spider Hero is out of web shooter fluid"
+
+        self.energy -= 80
+
+        if self.energy == 0:
+            self.energy = 1
+
+        self.save()
+        return f"{self.name} as Spider Hero swings from buildings using web shooters"
 
 
 class FlashHero(Hero):
