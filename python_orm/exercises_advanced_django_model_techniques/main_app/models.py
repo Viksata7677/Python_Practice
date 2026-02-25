@@ -12,3 +12,13 @@ class Customer(models.Model):
     email = models.EmailField(error_messages = {'invalid': "Enter a valid email address"})
     phone_number = models.CharField(max_length=13, validators=[RegexValidator(regex=r'^\+359\d{9}$', message="Phone number must start with '+359' followed by 9 digits")])
     website_url = models.URLField(error_messages={'invalid': "Enter a valid URL"})
+
+
+class BaseMedia(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    genre = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
