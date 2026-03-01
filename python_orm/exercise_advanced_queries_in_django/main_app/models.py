@@ -1,7 +1,21 @@
+from decimal import Decimal
 from django.db import models
+from django.db.models.aggregates import Count
 
 
 # Create your models here.
+class RealEstateListingManager(models.Manager):
+    def by_property_type(self, property_type: str):
+        return self.filter(property_type=property_type)
+
+    def in_price_range(self, min_price: Decimal, max_price: Decimal):
+        return self.filter(price__gte=min_price, price__lte=max_price)
+
+    def with_bedrooms(self, bedrooms_count: int):
+        return self.filter(bedrooms=bedrooms_count)
+
+    def popular_locations(self):
+        return self.values('location').annotate(location_count=Count('location')).order_by('-location_count', 'location')[:2]
 
 
 class RealEstateListing(models.Model):
@@ -17,6 +31,8 @@ class RealEstateListing(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     bedrooms = models.PositiveIntegerField()
     location = models.CharField(max_length=100)
+
+    objects = RealEstateListingManager()
 
 
 class VideoGame(models.Model):

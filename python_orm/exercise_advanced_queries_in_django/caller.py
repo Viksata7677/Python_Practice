@@ -7,4 +7,3 @@ django.setup()
 
 # Import your models here
 
-# Run and print your queries
