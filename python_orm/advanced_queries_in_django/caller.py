@@ -6,7 +6,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 # Import your models
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, F
 from main_app.models import Product, Category, Customer, Order, OrderProduct
 
 
@@ -96,4 +96,14 @@ def filter_products():
     return "\n".join(result)
 
 
+def give_discount():
+    query = Q(is_available=True) & Q(price__gt=3.00)
+    Product.objects.filter(query).update(price=F('price') * 0.7)
+    all_available_products = Product.objects.filter(is_available=True).order_by('-price', 'name')
 
+    result = []
+
+    for product in all_available_products:
+        result.append(f'{product.name}: {product.price}lv.')
+
+    return '\n'.join(result)
