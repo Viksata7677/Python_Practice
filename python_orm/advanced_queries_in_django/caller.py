@@ -6,7 +6,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
 django.setup()
 
 # Import your models
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from main_app.models import Product, Category, Customer, Order, OrderProduct
 
 
@@ -83,3 +83,17 @@ def ordered_products_per_customer():
             result.append(f'- Product: {order_product.product.name}, Category: {order_product.product.category.name}')
 
     return "\n".join(result)
+
+
+def filter_products():
+    query = Q(is_available=True) & Q(price__gt=3.00)
+    filtered_products = Product.objects.filter(query).order_by('-price', 'name')
+
+    result = []
+    for product in filtered_products:
+        result.append(f'{product.name}: {product.price}lv.')
+
+    return "\n".join(result)
+
+
+
