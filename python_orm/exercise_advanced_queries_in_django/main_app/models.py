@@ -1,6 +1,6 @@
 from decimal import Decimal
 from django.db import models
-from django.db.models.aggregates import Count
+from django.db.models.aggregates import Count, Max, Avg
 
 from main_app.validators import RangeValidator
 
@@ -18,6 +18,24 @@ class RealEstateListingManager(models.Manager):
 
     def popular_locations(self):
         return self.values('location').annotate(location_count=Count('location')).order_by('-location_count', 'location')[:2]
+
+
+class VideoGameManager(models.Manager):
+    def games_by_genre(self, genre: str):
+        return self.filter(genre=genre)
+
+    def recently_released_games(self, year: int):
+        return self.filter(release_year__gte=year)
+
+    def highest_rated_game(self):
+        return self.annotate(max_rating=Max('rating')).order_by('-max_rating').first()
+
+    def lowest_rated_game(self):
+        return self.order_by('-rating').last()
+
+    def average_rating(self):
+        avg_rating = self.aggregate(avg_rating=Avg('rating'))['avg_rating']
+        return f'{avg_rating:.1f}'
 
 
 class RealEstateListing(models.Model):
@@ -50,6 +68,8 @@ class VideoGame(models.Model):
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES)
     release_year = models.PositiveIntegerField(validators=[RangeValidator(1990, 2023, message="The release year must be between 1990 and 2023")])
     rating = models.DecimalField(max_digits=2, decimal_places=1, validators=[RangeValidator(0, 10)])
+
+    objects = VideoGameManager()
 
     def __str__(self):
         return self.title
