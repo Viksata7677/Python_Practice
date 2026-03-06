@@ -21,7 +21,7 @@ class Director(BaseModel):
     years_of_experience = models.SmallIntegerField(validators=[MinValueValidator(0)], default=0)
 
 
-class Actor(BaseModel, AwardedMixin, LastUpdatedMixin):
+class Actor(AwardedMixin, LastUpdatedMixin, BaseModel):
     pass
 
 
@@ -32,7 +32,7 @@ class GenreChoices(TextChoices):
     OTHER = 'Other', 'Other'
 
 
-class Movie(models.Model, AwardedMixin, LastUpdatedMixin):
+class Movie(AwardedMixin, LastUpdatedMixin, models.Model):
     title = models.CharField(max_length=150, validators=[MinLengthValidator(5)])
     release_date = models.DateField()
     storyline = models.TextField(null=True, blank=True)
