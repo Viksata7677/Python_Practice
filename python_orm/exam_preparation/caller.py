@@ -10,7 +10,7 @@ django.setup()
 
 from main_app.models import Director, Actor, Movie
 
-from django.db.models import Q, Count, Avg
+from django.db.models import Q, Count, Avg, F
 
 
 def get_directors(search_name=None, search_nationality=None):
@@ -73,14 +73,32 @@ def get_actors_by_movies_count():
 
 
 def get_top_rated_awarded_movie():
-    highest_rating_movie = Movie.objects.select_related('starring_actor').prefetch_related('actors').filter('is_awarded=True').order_by('-rating', 'title').first()
+    top_movie = Movie.objects\
+        .select_related('starring_actor')\
+        .prefetch_related('actors')\
+        .filter(is_awarded=True)\
+        .order_by('-rating', 'title')\
+        .first()
 
-    if highest_rating_movie in None:
+    if top_movie is None:
         return ''
 
-    starring_actor = highest_rating_movie.starring_actor.full_name if highest_rating_movie.starring_actor else 'N/A'
+    starring_actor = top_movie.starring_actor.full_name if top_movie.starring_actor else 'N/A'
 
-    praticipating_actors = highest_rating_movie.actor.order_by('full_name').values_list('full_name', flat=True)
+    participating_actors = top_movie.actors.order_by('full_name').values_list('full_name', flat=True)
 
-    cast = ', '.join(praticipating_actors)
-    return f"Top rated awarded movie: {highest_rating_movie.title}, rating: {highest_rating_movie.rating:.1f}. Starring actor: {starring_actor}. Cast: {cast}."
+    cast = ', '.join(participating_actors)
+
+    return f"Top rated awarded movie: {top_movie.title}, rating: {top_movie.rating:.1f}."\
+            f" Starring actor: {starring_actor}. Cast: {cast}."
+
+
+def increase_rating():
+    movies_to_update = Movie.objects.filter(is_classic=True, rating__lt=10)
+
+    if not movies_to_update:
+        return 'No ratings increased.'
+
+    updated_movies_count = movies_to_update.count()
+    movies_to_update.update(rating=F('rating') + 0.1)
+    return f"Rating increased for {updated_movies_count} movies."
