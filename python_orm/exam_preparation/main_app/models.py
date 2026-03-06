@@ -2,6 +2,7 @@ from django.core.validators import MinLengthValidator, MinValueValidator, MaxLen
 from django.db import models
 from django.db.models import TextChoices, CASCADE
 
+from main_app.managers import DirectorManager
 from main_app.mixins import AwardedMixin, LastUpdatedMixin
 
 
@@ -20,6 +21,7 @@ class BaseModel(models.Model):
 class Director(BaseModel):
     years_of_experience = models.SmallIntegerField(validators=[MinValueValidator(0)], default=0)
 
+    objects = DirectorManager()
 
 class Actor(AwardedMixin, LastUpdatedMixin, BaseModel):
     pass
