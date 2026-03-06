@@ -1,5 +1,7 @@
-from django.core.validators import MinLengthValidator, MinValueValidator
+from django.core.validators import MinLengthValidator, MinValueValidator, MaxLengthValidator, MaxValueValidator
 from django.db import models
+from django.db.models import TextChoices, CASCADE
+
 
 # Create your models here.
 
@@ -20,3 +22,24 @@ class Director(BaseModel):
 class Actor(BaseModel):
     is_awarded = models.BooleanField(default=False)
     last_updated = models.DateTimeField(auto_now=True)
+
+
+class GenreChoices(TextChoices):
+    ACTION = 'Action', 'Action'
+    COMEDY = 'Comedy', 'Comedy'
+    DRAMA = 'Drama', 'Drama'
+    OTHER = 'Other', 'Other'
+
+
+class Movie(models.Model):
+    title = models.CharField(max_length=150, validators=[MinLengthValidator(5)])
+    release_date = models.DateField()
+    storyline = models.TextField(null=True, blank=True)
+    genre = models.CharField(max_length=6, choices=GenreChoices.choices, default=GenreChoices.OTHER)
+    rating = models.DecimalField(max_digits=3, decimal_places=1, validators=[MinValueValidator(0.0), MaxValueValidator(10.0)], default=0.0)
+    is_classic = models.BooleanField(default=False)
+    is_awarded = models.BooleanField(default=False)
+    last_updated = models.DateTimeField(auto_now=True)
+    director = models.ForeignKey(to=Director, on_delete=models.CASCADE)
+    starring_actor = models.ForeignKey(to=Actor, null=True, on_delete=models.SET_NULL)
+    actors = models.ManyToManyField(to=Actor)
