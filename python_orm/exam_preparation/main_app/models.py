@@ -1,4 +1,4 @@
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
 
 # Create your models here.
@@ -11,3 +11,9 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Director(BaseModel):
+    years_of_experience = models.SmallIntegerField(validators=[MinValueValidator(0)], default=0)
+
+
