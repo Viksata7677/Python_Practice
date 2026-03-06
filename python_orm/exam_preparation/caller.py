@@ -8,7 +8,8 @@ django.setup()
 
 # Import your models here
 
-from main_app.models import Director, Actor
+from main_app.models import Director, Actor, Movie
+
 from django.db.models import Q, Count, Avg
 
 
@@ -69,3 +70,17 @@ def get_actors_by_movies_count():
         result.append(f"{a.full_name}, participated in {a.movies_count} movies")
 
     return '\n'.join(result)
+
+
+def get_top_rated_awarded_movie():
+    highest_rating_movie = Movie.objects.select_related('starring_actor').prefetch_related('actors').filter('is_awarded=True').order_by('-rating', 'title').first()
+
+    if highest_rating_movie in None:
+        return ''
+
+    starring_actor = highest_rating_movie.starring_actor.full_name if highest_rating_movie.starring_actor else 'N/A'
+
+    praticipating_actors = highest_rating_movie.actor.order_by('full_name').values_list('full_name', flat=True)
+
+    cast = ', '.join(praticipating_actors)
+    return f"Top rated awarded movie: {highest_rating_movie.title}, rating: {highest_rating_movie.rating:.1f}. Starring actor: {starring_actor}. Cast: {cast}."
