@@ -35,3 +35,11 @@ def get_directors(search_name=None, search_nationality=None):
 
     return '\n'.join(result)
 
+
+def get_top_director():
+    director = Director.objects.get_directors_by_movies_count().first()
+
+    if not director:
+        return ''
+    else:
+        return f'Top Director: {director.full_name}, movies: {director.movies_count}.'
