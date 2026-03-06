@@ -8,8 +8,9 @@ django.setup()
 
 # Import your models here
 
-from main_app.models import Director
-from django.db.models import Q
+from main_app.models import Director, Actor
+from django.db.models import Q, Count, Avg
+
 
 def get_directors(search_name=None, search_nationality=None):
     if search_name is None and search_nationality is None:
@@ -43,3 +44,15 @@ def get_top_director():
         return ''
     else:
         return f'Top Director: {director.full_name}, movies: {director.movies_count}.'
+
+
+def get_top_actor():
+    actor = Actor.objects.prefetch_related('starring_movies').annotate(movies_count=Count('starring_movies'),
+                                                                       avg_rating=Avg('starring_movies__rating')).order_by('-movies_count', 'full_name').first()
+
+    if not actor or not actor.movies_count:
+        return ''
+
+    movies = ', '.join(m.title for m in actor.starring_movies.all() if m)
+    return (f"Top Actor: {actor.full_name}, starring in movies: {movies}, "
+            f"movies average rating: {actor.avg_rating:.1f}")
