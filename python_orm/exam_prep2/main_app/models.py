@@ -1,5 +1,7 @@
 from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
+from django.db.models import CASCADE
+
 
 # Create your models here.
 class Profile(models.Model):
@@ -18,3 +20,12 @@ class Product(models.Model):
     is_stock = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     is_available = models.BooleanField(default=True)
     creation_date = models.DateTimeField(auto_now_add=True)
+
+#TODO: ADD MIXIN FOR creation_date
+
+class Order(models.Model):
+    profile = models.ForeignKey(to=Profile, on_delete=CASCADE, related_name='orders')
+    products = models.ManyToManyField(to=Product, related_name='orders')
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
+    creation_date = models.DateTimeField(auto_now_add=True)
+    is_completed = models.BooleanField(default=False)
