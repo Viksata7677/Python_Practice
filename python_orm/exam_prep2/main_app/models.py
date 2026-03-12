@@ -1,6 +1,5 @@
 from django.core.validators import MinLengthValidator, MinValueValidator
 from django.db import models
-from django.db.models import CASCADE
 
 from main_app.mixins import CreationDateMixin
 
@@ -24,7 +23,7 @@ class Product(CreationDateMixin):
 
 
 class Order(CreationDateMixin):
-    profile = models.ForeignKey(to=Profile, on_delete=CASCADE, related_name='orders')
+    profile = models.ForeignKey(to=Profile, on_delete=models.CASCADE, related_name='orders')
     products = models.ManyToManyField(to=Product, related_name='orders')
     total_price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
     is_completed = models.BooleanField(default=False)
