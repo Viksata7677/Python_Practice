@@ -18,7 +18,7 @@ class Product(CreationDateMixin):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0.01)])
-    is_stock = models.PositiveIntegerField(validators=[MinValueValidator(0)])
+    in_stock = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     is_available = models.BooleanField(default=True)
 
 
