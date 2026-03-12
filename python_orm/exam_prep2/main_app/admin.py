@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from main_app.models import Profile, Product
+from main_app.models import Profile, Product, Order
 
 
 # Register your models here.
@@ -15,3 +15,10 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ['name', 'price', 'in_stock', 'is_available']
     list_filter = ['is_available']
     search_fields = ['name']
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['profile', 'total_price', 'creation_date', 'is_completed']
+    list_filter = ['is_completed']
+    search_fields = ['profile__full_name']
