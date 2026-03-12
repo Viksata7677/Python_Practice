@@ -22,3 +22,11 @@ def get_profiles(search_string=None):
 
     return '\n'.join(f"Profile: {p.full_name}, email: {p.email}, phone number: {p.phone_number}, orders: {p.orders.count()}" for p in profiles)
 
+
+def get_loyal_profiles():
+    profiles = Profile.objects.get_regular_customers()
+
+    if not profiles.exists():
+        return ''
+
+    return '\n'.join(f"Profile: {p.full_name}, orders: {p.orders.count()}" for p in profiles)
