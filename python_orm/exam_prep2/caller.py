@@ -1,6 +1,8 @@
 import os
+from decimal import Decimal
+
 import django
-from django.db.models import Q, Count
+from django.db.models import Q, Count, F
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
@@ -55,3 +57,11 @@ def get_top_products():
     product_lines = '\n'.join(f"{p.name}, sold {p.orders_count} times" for p in top_products)
 
     return f"Top products:\n" + product_lines
+
+
+def apply_discounts():
+    not_completed_orders = Order.objects.annotate(products_count=Count('products')).filter(product_count__gt=2, is_completed=False).update(
+        total_price=F('total_price') * Decimal(0.90)
+    )
+
+    return f"Discount applied to {not_completed_orders} orders."
