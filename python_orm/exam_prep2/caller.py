@@ -2,7 +2,8 @@ import os
 from decimal import Decimal
 
 import django
-from django.db.models import Q, Count, F
+from django.db.models import Q, Count, F, Case, When, Value
+from django.db.models.fields import BooleanField
 
 # Set up Django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "orm_skeleton.settings")
@@ -60,8 +61,28 @@ def get_top_products():
 
 
 def apply_discounts():
-    not_completed_orders = Order.objects.annotate(products_count=Count('products')).filter(product_count__gt=2, is_completed=False).update(
-        total_price=F('total_price') * Decimal(0.90)
+    not_completed_orders = Order.objects.annotate(products_count=Count('products')).filter(products_count__gt=2, is_completed=False).update(
+        total_price=F('total_price') * 0.90
     )
 
     return f"Discount applied to {not_completed_orders} orders."
+
+
+def complete_order():
+    order = Order.objects.filter(is_completed=False).order_by('creation_date').first()
+
+    if not order:
+        return ""
+
+    order.products.update(in_stock=F('in_stock') - 1,
+                                               is_available=Case(
+                                                   When(in_stock=1, then=Value(False)),
+                                                   default=F('is_available'),
+                                                   output_field=BooleanField()
+                                                )
+                                            )
+
+    order.is_completed = True
+    order.save()
+
+    return "Order has been completed!"
