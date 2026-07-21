@@ -1,5 +1,5 @@
 from zoo2.mammal import Mammal
 
 
-class Bear(Mammalg):
+class Bear(Mammal):
     pass
